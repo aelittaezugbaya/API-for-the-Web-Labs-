@@ -55,6 +55,14 @@ wiki.addEventListener('click', () => {
                     map: map,
                     title: place.summary,
                   });
+            const infowindow = new google.maps.InfoWindow({
+                content: '<h3>' + place.title + '</h3>' +
+                        '<p>' + place.summary + '</p>' +
+                        '<a href="http://' + place.wikipediaUrl + '" target="_blank">Wikipedia</a>',
+              });
+            marker.addListener('click', () => {
+                infowindow.open(map, marker);
+            });
             markers.push(marker);
         });
       });
