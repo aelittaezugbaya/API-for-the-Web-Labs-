@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Title of the document</title>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYwW0GPqj9mAptUEleQgbi9mwhOeYyJaA&callback=initMap" async defer></script>
+        
         <link rel="stylesheet" type="text/css" href="index.css"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
         
@@ -14,12 +14,17 @@
             <button type='submit' class="btn"><i class="fa fa-search"></i></button>
             <button type='button' id="wikipedia" class="btn">W</button>
         </form>
-        
+        <div id ="imageContainer"></div>
+        <button id = 'prev' type='button'>Prev</button>
+        <button id = 'next' type='button'>Next</button>
+        <button id = 'clear' type='button'>Clear Images</button>
         <div id='map'> </div>
-        <script src="index.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYwW0GPqj9mAptUEleQgbi9mwhOeYyJaA"></script>
+        <script src="index.js"></script>
+       
         <script src="https://use.fontawesome.com/f152a8bb0c.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
     </body>
 
 </html>

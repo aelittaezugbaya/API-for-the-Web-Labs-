@@ -7,6 +7,51 @@ const zoomV = 14;
 let lat = -34.397;
 let lng = 150.644;
 let markers = [];
+const imageContainer = $('#imageContainer');
+let globalImage;
+
+function addImage(url) {
+    const img = $('<img>');
+    img.attr('src', url);
+    imageContainer.append(img);
+    !img.is(':first-child') ? img.hide() : '';
+    return img;
+}
+
+const img1 = addImage('http://img.avatv.fi/mn_kuvat/mtv3/helmi/minisaitit/kapalakerho/kissat/2012/03/1356549.jpg');
+const img2 = addImage('http://img.avatv.fi/mn_kuvat/mtv3/helmi/minisaitit/kapalakerho/kissat/2012/05/1406247.jpg');
+globalImage = imageContainer.children()[0];
+
+function showImage(img) {
+    let global=globalImage;
+    global = $(global);
+    global.hide();
+    globalImage = img;
+    img.show();    
+}
+
+function clearImages() {
+    imageContainer.empty();
+}
+
+$('#prev').click(() => {
+    globalImage = $(globalImage); 
+    globalImage.prev().length==0 ?
+    showImage(imageContainer.children().last()) :
+    showImage(globalImage.prev());
+});
+
+$('#next').click(() => {
+    globalImage = $(globalImage);
+    globalImage.next().length==0 ?
+    showImage(imageContainer.children().first()): 
+    showImage(globalImage.next());
+});
+
+$('#clear').click(() => {
+    clearImages();
+});
+
 function initMap() {
     centerV = new google.maps.LatLng(lat, lng);
     map = new google.maps.Map(document.getElementById('map'), {
@@ -14,7 +59,7 @@ function initMap() {
         zoom: zoomV,
     });
 }
-
+initMap();
 const form = document.getElementById('form1');
 form.addEventListener('submit', (event)=>{
     event.preventDefault();
