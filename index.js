@@ -10,6 +10,59 @@ let markers = [];
 const imageContainer = $('#imageContainer');
 let globalImage;
 
+function flickr(data) {
+    console.log(data);
+}
+
+function getLocation(id) {
+    let geo;
+    return window.fetch(
+        `https://api.flickr.com/services/rest/?method=flickr.photos.geo.getLocation&api_key=85f72008301a7415984e2616c379c2af&photo_id=${id}&format=json&nojsoncallback=1`,
+        {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            },
+        }
+    ).then((res) => res.json())
+    .then((data) => ({
+        lat: Number(data.photo.location.latitude),
+        lon: Number(data.photo.location.longitude),
+    }));
+}
+
+$('#flickr').click(() => {
+    console.log('click');
+    window.fetch(
+        `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=85f72008301a7415984e2616c379c2af&lat=${map.getCenter().lat()}&lon=${map.getCenter().lng()}&format=json&nojsoncallback=1`,
+        {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            },
+        }
+    )
+    .then((res) => res.json())
+    .then((data) => {
+        console.log(data.photos.photo);
+        const locations = [];
+        data.photos.photo.forEach((photo) => {
+            getLocation(photo.id)
+            .then((geo) => {
+                console.log(geo);
+                const marker = new google.maps.Marker({
+                    position: {lat: geo.lat, lng: geo.lon},
+                    map: map,
+                    title: photo.title,
+                });
+
+                google.maps.event.addListener(marker, 'click', function() {
+                    addImage(`https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`);
+                });
+            });
+        });
+    });
+});
 function addImage(url) {
     const img = $('<img>');
     img.attr('src', url);
@@ -20,14 +73,15 @@ function addImage(url) {
 
 const img1 = addImage('http://img.avatv.fi/mn_kuvat/mtv3/helmi/minisaitit/kapalakerho/kissat/2012/03/1356549.jpg');
 const img2 = addImage('http://img.avatv.fi/mn_kuvat/mtv3/helmi/minisaitit/kapalakerho/kissat/2012/05/1406247.jpg');
+const img3 = addImage('https://baconmockup.com/300/200/');
 globalImage = imageContainer.children()[0];
 
 function showImage(img) {
-    let global=globalImage;
-    global = $(global);
-    global.hide();
+    let currentImage = globalImage;
+    currentImage = $(currentImage);
+    currentImage.hide();
     globalImage = img;
-    img.show();    
+    img.show();
 }
 
 function clearImages() {
@@ -35,17 +89,19 @@ function clearImages() {
 }
 
 $('#prev').click(() => {
-    globalImage = $(globalImage); 
-    globalImage.prev().length==0 ?
-    showImage(imageContainer.children().last()) :
-    showImage(globalImage.prev());
+    globalImage = $(globalImage);
+    globalImage.prev().length == 0 ?
+        showImage(imageContainer.children().last()) :
+        showImage(globalImage.prev());
 });
 
 $('#next').click(() => {
     globalImage = $(globalImage);
-    globalImage.next().length==0 ?
-    showImage(imageContainer.children().first()): 
-    showImage(globalImage.next());
+    if (globalImage.next().length == 0) {
+        showImage(imageContainer.children().first());
+    } else {
+        showImage(globalImage.next());
+    }
 });
 
 $('#clear').click(() => {
